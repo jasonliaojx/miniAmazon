@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector} from 'react-redux';
-import { listProducts, saveProduct } from '../actions/productActions';
+import { deleteProduct, listProducts, saveProduct } from '../actions/productActions';
 
 function ProductsScreen(props) {
     const [modalVisible, setModalVisible] = useState(false);
@@ -12,10 +12,14 @@ function ProductsScreen(props) {
     const [category, setCategory] = useState('');
     const [countInStock, setCountInStock] = useState('');
     const [description, setDescription] = useState('');
-    const productList = useSelector(state => state.productList);
+    const productList = useSelector((state) => state.productList);
     const {loading, products, error} = productList;
+    
     const productSave = useSelector(state => state.productSave);
     const {loading: loadingSave, success: successSave, error: errorSave } = productSave;
+
+    const productDelete = useSelector(state => state.productDelete);
+    const {loading: loadingDelete, success: successDelete, error: errorDelete} = productDelete;
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -26,7 +30,7 @@ function ProductsScreen(props) {
         return () => {
             //;
         };
-    }, [successSave]);
+    }, [successSave, successDelete]);
 
     const openModal = (product) => {
         setModalVisible(true);
@@ -48,133 +52,155 @@ function ProductsScreen(props) {
             category, countInStock, description}));
     }
 
+    const deleteHandler = (product) => {
+        dispatch(deleteProduct(product._id));
+    }
 
-    return <div className='content content-margined'>
-        <div className='product-header'>
+
+    return (
+        <div className="content content-margined">
+          <div className="product-header">
             <h3>Products</h3>
-            <button className='button primary' onclick={() => openModal({})}> Create Product</button>
-        </div>
-        <div className='product-list'>
-            <table>
-                <thread>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Price</th>
-                        <th>Category</th>
-                        <th>Brand</th>
-                        <th>Action</th>
-                    </tr>
-                </thread>
-                <tbody>
-                    {products.map(product => 
-                        (<tr>
-                        <td>{productList._id}</td>
-                        <td>{productList.name}</td>
-                        <td>{productList.price}</td>
-                        <td>{productList.category}</td>
-                        <td>{productList.brand}</td>
-                        <td>
-                            <button onClick={() => openModal(product)}>Edit</button>
-                            <button>Delete</button>
-                        </td>
-                    </tr>))} 
-                </tbody>
-            </table>
-        </div>
-        {modalVisible && <div className="form">
-            <form onSubmit={submitHandler}>
+            <button className="button primary" onClick={() => openModal({})}>
+              Create Product
+            </button>
+          </div>
+          {modalVisible && (
+            <div className="form">
+              <form onSubmit={submitHandler}>
                 <ul className="form-container">
-                    <li>
-                        <h3>Create Product</h3>
-                    </li>
-                    <li>
-                        {loadingSave && <div>Loading...</div>}
-                        {errorSave && <div>{errorSave}</div>}
-                    </li>
-                    <li>
-                        <label htmlFor="name">
-                            Name
-                        </label>
-                        <input
-                        type="text"
-                        name="name"
-                        id="name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}>
-                        </input>
-                    </li>
-                    <li>
+                  <li>
+                    <h2>Create Product</h2>
+                  </li>
+                  <li>
+                    {loadingSave && <div>Loading...</div>}
+                    {errorSave && <div>{errorSave}</div>}
+                  </li>
+    
+                  <li>
+                    <label htmlFor="name">Name</label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={name}
+                      id="name"
+                      onChange={(e) => setName(e.target.value)}
+                    ></input>
+                  </li>
+                  <li>
                     <label htmlFor="price">Price</label>
                     <input
-                    type="text"
-                    name="price"
-                    value={price}
-                    id="price"
-                    onChange={(e) => setPrice(e.target.value)}
+                      type="text"
+                      name="price"
+                      value={price}
+                      id="price"
+                      onChange={(e) => setPrice(e.target.value)}
                     ></input>
-                </li>
-                <li>
+                  </li>
+                  <li>
                     <label htmlFor="image">Image</label>
                     <input
-                    type="text"
-                    name="image"
-                    value={image}
-                    id="image"
-                    onChange={(e) => setImage(e.target.value)}
+                      type="text"
+                      name="image"
+                      value={image}
+                      id="image"
+                      onChange={(e) => setImage(e.target.value)}
                     ></input>
-                    <input type="file" onChange={uploadFileHandler}></input>
-                    {uploading && <div>Uploading...</div>}
-                </li>
-                <li>
+                  </li>
+                  <li>
                     <label htmlFor="brand">Brand</label>
                     <input
-                    type="text"
-                    name="brand"
-                    value={brand}
-                    id="brand"
-                    onChange={(e) => setBrand(e.target.value)}
+                      type="text"
+                      name="brand"
+                      value={brand}
+                      id="brand"
+                      onChange={(e) => setBrand(e.target.value)}
                     ></input>
-                </li>
-                <li>
+                  </li>
+                  <li>
                     <label htmlFor="countInStock">CountInStock</label>
                     <input
-                    type="text"
-                    name="countInStock"
-                    value={countInStock}
-                    id="countInStock"
-                    onChange={(e) => setCountInStock(e.target.value)}
+                      type="text"
+                      name="countInStock"
+                      value={countInStock}
+                      id="countInStock"
+                      onChange={(e) => setCountInStock(e.target.value)}
                     ></input>
-                </li>
-                <li>
-                    <label htmlFor="category">Category</label>
+                  </li>
+                  <li>
+                    <label htmlFor="name">Category</label>
                     <input
-                    type="text"
-                    name="category"
-                    value={category}
-                    id="category"
-                    onChange={(e) => setCategory(e.target.value)}
+                      type="text"
+                      name="category"
+                      value={category}
+                      id="category"
+                      onChange={(e) => setCategory(e.target.value)}
                     ></input>
-                </li>
-                <li>
+                  </li>
+                  <li>
                     <label htmlFor="description">Description</label>
                     <textarea
-                    name="description"
-                    value={description}
-                    id="description"
-                    onChange={(e) => setDescription(e.target.value)}
+                      name="description"
+                      value={description}
+                      id="description"
+                      onChange={(e) => setDescription(e.target.value)}
                     ></textarea>
-                </li>
-                    <li>
-                        <button type="submit" className="button primary">{id? "Update" : 'Create'} </button>
-                    </li>
-                    <li>
-                        <button type="button" className="button primary" onClick={()=> setModalVisible(false)}>Back</button>
-                    </li>
+                  </li>
+                  <li>
+                    <button type="submit" className="button primary">
+                      {id ? 'Update' : 'Create'}
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      type="button"
+                      onClick={() => setModalVisible(false)}
+                      className="button secondary">
+                      Back
+                    </button>
+                  </li>
                 </ul>
-            </form>
-        </div>}
-    </div>
-}
+              </form>
+            </div>
+          )}
+    
+          <div className="product-list">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Price</th>
+                  <th>Category</th>
+                  <th>Brand</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {products.map((product) => (
+                  <tr key={product._id}>
+                    <td>{product._id}</td>
+                    <td>{product.name}</td>
+                    <td>{product.price}</td>
+                    <td>{product.category}</td>
+                    <td>{product.brand}</td>
+                    <td>
+                      <button className="button" onClick={() => openModal(product)}>
+                        Edit
+                      </button>{' '}
+                      <button
+                        className="button"
+                        onClick={() => deleteHandler(product)}>
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+    }
 
 export default ProductsScreen;

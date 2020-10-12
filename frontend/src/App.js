@@ -6,7 +6,7 @@ import CartScreen from './screens/CartScreen';
 import HomeScreen from './screens/HomeScreen';
 import ProductScreen from './screens/ProductScreen';
 import RegisterScreen from './screens/RegisterScreen';
-import SigninScreen from './screens/ProductsScreen';
+import SigninScreen from './screens/SigninScreen';
 import ProductsScreen from './screens/ProductsScreen';
 
 function App() {

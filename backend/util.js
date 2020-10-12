@@ -12,7 +12,7 @@ const getToken = (user) => {
     })
 }
 
-const isAuth = (req, res, nex) => {
+const isAuth = (req, res, next) => {
     const token = req.headers.authorization;
     if (token) {
         const onlyToken = token.slice(7, token.length);
@@ -20,12 +20,13 @@ const isAuth = (req, res, nex) => {
             if (error) {
                 return res.status(401).send({message: 'Invalid Token'});
             }
-            req.user = token;
+            req.user = decode;
             next();
-            return
+            return;
         })
+    } else {
+        return res.status(401).send({message: 'Token is not supplied'});
     }
-    return res.status(401).send({message: 'Token is not supplied'})
 }
 
 const isAdmin = (req, res, next) => {
