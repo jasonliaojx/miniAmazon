@@ -2,9 +2,12 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import CheckoutSteps from '../components/CheckoutSteps';
+import { createOrder } from '../actions/orderActions';
 function PlaceOrderScreen(props) {
 
-const cart = useSelector(state => state.cart);
+  const cart = useSelector(state => state.cart);
+  const orderCreate = useSelector(state => state.orderCreate);
+  const { loading, success, error, order } = orderCreate;
 
   const { cartItems, shipping, payment } = cart;
   if (!shipping.address) {
@@ -21,13 +24,17 @@ const cart = useSelector(state => state.cart);
 
   const placeOrderHandler = () => {
     // create an order
+    dispatch(createOrder({
+      orderItems: cartItems, shipping, payment, itemsPrice, shippingPrice,
+      taxPrice, totalPrice
+    }));
   }
   useEffect(() => {
-  }, []);
+    if (success) {
+      props.history.push("/order/" + order._id);
+    }
 
-  const checkoutHandler = () => {
-    props.history.push("/signin?redirect=shipping");
-  }
+  }, [success]);
 
   return <div>
     <CheckoutSteps step1 step2 step3 step4 ></CheckoutSteps>
@@ -89,6 +96,7 @@ const cart = useSelector(state => state.cart);
           </ul>
         </div>
 
+      
       </div>
       <div className="placeorder-action">
         <ul>
@@ -115,7 +123,6 @@ const cart = useSelector(state => state.cart);
             <div>${totalPrice}</div>
           </li>
         </ul>
-
       </div>
 
     </div>
