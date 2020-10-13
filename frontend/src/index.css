@@ -355,5 +355,74 @@ th {
 }
 
 tbody>tr:nth-child(odd) {
-  background-color: #808080;
+  background-color: #E5E5E5;
+}
+
+/*Checkout steps*/
+
+.checkout-steps {
+  display: flex;
+  justify-content: space-between;
+  width: 40rem;
+  margin: 1rem auto;
+}
+
+.checkout-steps > div {
+  border-top: 0.3rem #E5E5E5 solid;
+  color: #E5E5E5;
+  flex: 1 1;
+  padding-top: 1rem;
+}
+
+.checkout-steps > div.active {
+  border-top: 0.3rem #E89923 solid;
+  color: #E89923;
+}
+
+/*place order*/
+
+.placeorder {
+  display: flex;
+  flex-grow: wrap;
+}
+
+.placeorder-info {
+  flex: 3 1 60rem;
+}
+
+.placeorder-action {
+  flex: 1 1 20rem;
+  border: 0.1rem #E5E5E5 solid;
+  border-radius: 0.5rem;
+  background-color: #f8f8f8;
+  padding: 1rem;
+}
+
+.placeorder-info > div {
+  border: 0.1rem #E5E5E5 solid;
+  border-radius: 0.5rem;
+  background-color: #f8f8f8;
+  padding: 1rem;
+  margin: 1rem;
+}
+
+.placeorder-info > div.first-child {
+  margin-top: 0;
+}
+
+.placeorder-action > ul {
+  padding: 0;
+  list-style-type: none;
+}
+
+.placeorder-action > ul  >li {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.placeorder-action > ul  > li:last-child {
+  font-size: 2rem;
+  color: #E89923;
+  font-weight: bold;
 }
