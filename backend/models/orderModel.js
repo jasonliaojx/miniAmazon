@@ -6,6 +6,7 @@ const shippingSchema = {
   country: { type: String, required: true },
 };
 
+
 const paymentSchema = {
   paymentMethod: { type: String, required: true }
 };
