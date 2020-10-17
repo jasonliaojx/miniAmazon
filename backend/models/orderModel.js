@@ -21,7 +21,8 @@ const orderItemSchema = new mongoose.Schema({
     ref: 'Product',
     required: true
   },
-});
+}
+);
 
 const orderSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
@@ -38,7 +39,8 @@ const orderSchema = new mongoose.Schema({
   deliveredAt: { type: Date },
 }, {
   timestamps: true
-});
+}
+);
 
 const orderModel = mongoose.model("Order", orderSchema);
 export default orderModel; 
